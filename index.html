@@ -196,11 +196,6 @@
 						<p><span>Danielle</span><br>
 						<small>Dental Hygienist</small></p>
 					</li>
-					<!-- <li>
-						<img src="../img/team/lauren.png" alt="Lauren">
-						<p><span>Lauren</span><br>
-						<small>Dental Hygienist</small></p>
-					</li> -->
 				</ul>
 			</div>
 
@@ -585,8 +580,8 @@
 				<h4 class="modal-title" id="bookApptLabel">Book an Appointment</h4>
 			</div>
 			<div class="modal-body">
-      
-        <form action="inc/process.php" method="POST" class="form-horizontal">
+        
+        <form action="https://formspree.io/xrgyvdyw" method="POST" class="form-horizontal" id="appt-form">
 
         <!-- NAME -->
         <div id="name-group" class="row form-group">
@@ -636,10 +631,12 @@
           <!-- errors will go here -->
         </div>
 
+        <p id="appt-status"></p>
+
         <div class="row form-group">
           <div class="col-sm-3"><span class="sr-only">Submit</span></div>
           <div class="col-sm-9">
-            <button type="submit" class="btn btn-primary">Submit <span class="fa fa-arrow-right"></span></button>
+            <button type="submit" class="btn btn-primary" id="appt-submit">Submit <span class="fa fa-arrow-right"></span></button>
           </div>
         </div>
 
@@ -683,17 +680,6 @@
 		</div>
 	</div>
 </div>
-
-<script>
-  function setMargin() {
-    var height = document.getElementById('covid').clientHeight
-    var mainElem = document.getElementById("carousel-example-generic")
-    mainElem.style.marginTop = height + 'px'
-  }
-
-  setMargin()
-  window.addEventListener("resize", setMargin)
-</script>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="js/libs/bootstrap.min.js"></script>
@@ -741,6 +727,59 @@
   ga('create', 'UA-59164517-1', 'auto');
   ga('send', 'pageview');
 
+</script>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function() {
+
+    // get the form elements defined in your form HTML above
+    
+    var form = document.getElementById("appt-form");
+    var button = document.getElementById("appt-submit");
+    var status = document.getElementById("appt-status");
+
+    // Success and Error functions for after the form is submitted
+    
+    function success() {
+      form.reset();
+      button.style = "display: none ";
+      status.innerHTML = "We have received your request";
+      setTimeout(() => {
+        $("#bookAppt .close").click()
+        button.style = "display: inline-block"
+        status.innerHTML = ""
+      }, 3000)
+    }
+
+    function error() {
+      status.innerHTML = "Oops! There was a problem.";
+    }
+
+    // handle the form submission event
+
+    form.addEventListener("submit", function(ev) {
+      ev.preventDefault();
+      var data = new FormData(form);
+      ajax(form.method, form.action, data, success, error);
+    });
+  });
+  
+  // helper function for sending an AJAX request
+
+  function ajax(method, url, data, success, error) {
+    var xhr = new XMLHttpRequest();
+    xhr.open(method, url);
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState !== XMLHttpRequest.DONE) return;
+      if (xhr.status === 200) {
+        success(xhr.response, xhr.responseType);
+      } else {
+        error(xhr.status, xhr.response, xhr.responseType);
+      }
+    };
+    xhr.send(data);
+  }
 </script>
 
 </body>
