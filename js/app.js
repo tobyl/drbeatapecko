@@ -47,6 +47,6 @@
   ga('create', 'UA-59164517-1', 'auto');
   ga('send', 'pageview');
   
-  $('#covidModal').modal('show')
+  // $('#covidModal').modal('show')
 
 })(jQuery);
